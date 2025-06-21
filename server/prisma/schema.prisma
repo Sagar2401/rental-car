@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model VehicleType {
+  id        Int       @id @default(autoincrement())
+  name      String
+  wheels    Int       // Add this field: 2 or 4
+  vehicles  Vehicle[]
+}
+
+
+model Vehicle {
+  id             Int       @id @default(autoincrement())
+  name           String
+  typeId         Int
+  vehicleType    VehicleType @relation(fields: [typeId], references: [id])
+  bookings       Booking[]
+}
+
+model Booking {
+  id         Int      @id @default(autoincrement())
+  vehicleId  Int
+  startDate  DateTime
+  endDate    DateTime
+  firstName   String
+  lastName   String
+  vehicle    Vehicle @relation(fields: [vehicleId], references: [id])
+}
